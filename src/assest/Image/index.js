@@ -1,0 +1,1 @@
+export const Menu=require('../Image/menuIcon.png')

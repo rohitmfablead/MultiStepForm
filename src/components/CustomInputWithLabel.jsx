@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 
 const CustomInputWithLabel = ({
   label,
@@ -11,24 +11,46 @@ const CustomInputWithLabel = ({
   rightIcon,
   onRightIconPress,
   editable = true,
-  style
+  style,
+  maxLength
 }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(!secureTextEntry);
+
   return (
     <View style={[styles.container, style]}>
-      {label && <Text style={styles.label}>{label}</Text>}
-      <View style={styles.inputContainer}>
+      {label && <Text style={styles.label}>{label}*</Text>}
+      <View style={[styles.inputContainer, { borderColor: value ? 'green' : 'gray' }]}>
+
         <TextInput
           style={styles.input}
           placeholder={placeholder}
           value={value}
           onChangeText={onChangeText}
-          secureTextEntry={secureTextEntry}
+          secureTextEntry={!isPasswordVisible}
           keyboardType={keyboardType}
           editable={editable}
+          maxLength={maxLength}
+          
         />
-        {rightIcon && (
+        {value && rightIcon && ( 
           <TouchableOpacity onPress={onRightIconPress} style={styles.iconContainer}>
-            {/* <Ionicons name={rightIcon} size={24} color="gray" /> */}
+            <Text style={{ color: "green" }}>✔</Text>
+          </TouchableOpacity>
+        )}
+        {secureTextEntry && (
+          <TouchableOpacity
+            style={{
+              marginHorizontal: 5,
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: 60,
+              height: 35,
+              borderRadius: 5,
+              backgroundColor: 'rgba(0,0,0,.2)',
+            }}
+            onPress={() => setIsPasswordVisible(!isPasswordVisible)}
+          >
+            <Text style={styles.toggleText}>{isPasswordVisible ? 'Hide' : 'Show'}</Text>
           </TouchableOpacity>
         )}
       </View>
@@ -63,5 +85,10 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     marginLeft: 10,
+  },
+  toggleText: {
+    fontSize: 14,
+    color: '#000',
+    fontWeight: '500',
   },
 });
